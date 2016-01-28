@@ -3,18 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.bean;
+package cn.orz.pascal.example.reactive_javaee.pushnotification;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.websocket.Session;
 
 /**
+ * WebSocket Manager.
  *
  * @author koduki
  */

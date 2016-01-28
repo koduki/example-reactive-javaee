@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.bean;
+package cn.orz.pascal.example.reactive_javaee.pushnotification;
 
-import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import cn.orz.pascal.example.reactive_javaee.commons.ItemOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.annotation.Resource;
@@ -14,8 +14,13 @@ import javax.inject.Inject;
 import javax.jms.Destination;
 import javax.jms.JMSContext;
 
+/**
+ * Event message sender to JMS.
+ *
+ * @author koduki
+ */
 @Stateless
-public class Sender {
+public class MessageSender {
 
     @Inject
     private JMSContext context;

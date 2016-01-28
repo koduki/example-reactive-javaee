@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.bean;
+package cn.orz.pascal.example.reactive_javaee.commons;
 
-import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -21,7 +19,7 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class ItemOrderFacade extends AbstractFacade<ItemOrder> {
 
-    @PersistenceContext(unitName = "cn.orz.pascal_example-reactive-javaee_war_1.0-SNAPSHOTPU")
+    @PersistenceContext(unitName = "example-reactive-javaee_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
     @Override

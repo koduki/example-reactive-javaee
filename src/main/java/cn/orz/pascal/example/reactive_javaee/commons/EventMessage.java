@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.bean;
+package cn.orz.pascal.example.reactive_javaee.commons;
 
 import java.io.Serializable;
 import javax.persistence.Transient;
 import lombok.Data;
 
 /**
+ * Event message common interface.
  *
  * @author koduki
  */
 @Data
-public class MessageEvent implements Serializable {
+public class EventMessage implements Serializable {
 
     @Transient
     private static final long serialVersionUID = 1L;

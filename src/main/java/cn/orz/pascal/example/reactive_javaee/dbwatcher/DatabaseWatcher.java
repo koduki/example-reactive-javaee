@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.web;
+package cn.orz.pascal.example.reactive_javaee.dbwatcher;
 
-import cn.orz.pascal.example.reactive_javaee.bean.ItemOrderFacade;
-import cn.orz.pascal.example.reactive_javaee.bean.MessageEvent;
-import cn.orz.pascal.example.reactive_javaee.bean.Sender;
-import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import cn.orz.pascal.example.reactive_javaee.commons.ItemOrderFacade;
+import cn.orz.pascal.example.reactive_javaee.commons.EventMessage;
+import cn.orz.pascal.example.reactive_javaee.pushnotification.MessageSender;
+import cn.orz.pascal.example.reactive_javaee.commons.ItemOrder;
+import cn.orz.pascal.example.reactive_javaee.commons.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
@@ -19,6 +20,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 /**
+ * EventMessage Publisher. This function is re-make by DBMS_ALERT or TopLink
+ * Data Service in production.
  *
  * @author koduki
  */
@@ -26,10 +29,13 @@ import javax.annotation.PostConstruct;
 public class DatabaseWatcher {
 
     @Inject
-    Sender sender;
+    MessageSender sender;
 
     @Inject
     ItemOrderFacade itemOrderFacade;
+
+    @Inject
+    Logger logger;
 
     Date oldDate;
 
@@ -43,18 +49,18 @@ public class DatabaseWatcher {
         try {
 
             List<ItemOrder> items = itemOrderFacade.findByUpdated(oldDate);
-            System.out.println("updated is " + items.size());
+            logger.info("updated is " + items.size());
+
             ObjectMapper mapper = new ObjectMapper();
 
             for (ItemOrder order : items) {
-                MessageEvent event = new MessageEvent();
+                EventMessage event = new EventMessage();
                 event.setType(order.getClass().getSimpleName());
                 event.setUser(order.getUserName());
                 event.setBody(mapper.writeValueAsString(order));
 
                 String json = mapper.writeValueAsString(event);
                 sender.send(json);
-
             }
 
             this.oldDate = new Date();

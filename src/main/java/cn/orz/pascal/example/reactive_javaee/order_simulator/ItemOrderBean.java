@@ -1,26 +1,23 @@
+package cn.orz.pascal.example.reactive_javaee.order_simulator;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.web;
-
-import cn.orz.pascal.example.reactive_javaee.bean.ItemOrderFacade;
-import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import cn.orz.pascal.example.reactive_javaee.commons.ItemOrderFacade;
+import cn.orz.pascal.example.reactive_javaee.commons.ItemOrder;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Managed Bean for order simulator.
  *
  * @author koduki
  */
@@ -41,7 +38,7 @@ public class ItemOrderBean implements Serializable {
     @Getter
     @Setter
     private int price;
-    
+
     @Getter
     @Setter
     private String user;
@@ -50,7 +47,7 @@ public class ItemOrderBean implements Serializable {
         ItemOrder item = new ItemOrder(name, price, user);
         itemOrderFacade.create(item);
 
-        return "index";
+        return "order-simulator";
     }
 
     public List<ItemOrder> getItemOrders() {

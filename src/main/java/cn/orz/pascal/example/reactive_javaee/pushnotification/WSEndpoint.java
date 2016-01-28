@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.orz.pascal.example.reactive_javaee.web;
+package cn.orz.pascal.example.reactive_javaee.pushnotification;
 
-import cn.orz.pascal.example.reactive_javaee.bean.Event;
-import cn.orz.pascal.example.reactive_javaee.bean.WSManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -17,6 +15,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
+ * WebSocket Endpoint.
  *
  * @author koduki
  */
@@ -28,7 +27,12 @@ public class WSEndpoint {
 
     private Session current = null;
 
-    private void handle(Event event) {
+    /**
+     * handle server and client event.
+     *
+     * @param event
+     */
+    private void handle(WebEvent event) {
         switch (event.getType()) {
             case "broadcast":
                 manager.broadcast(event.getBody());
@@ -46,7 +50,7 @@ public class WSEndpoint {
     public void onMessage(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Event event = mapper.readValue(json, Event.class);
+            WebEvent event = mapper.readValue(json, WebEvent.class);
             handle(event);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
