@@ -1,33 +1,54 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>WebSocketテスト</title>
+        <title>Client Application</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script type="text/javascript">
             var socket;
-            $(document).ready(function(){
-                var host="ws://localhost:8080/example-reactive-javaee/endpoint";
+            $(document).ready(function () {
+                var host = "ws://localhost:8080/example-reactive-javaee/endpoint";
                 socket = new WebSocket(host);
-                
-                socket.onmessage = function(message){
+
+                socket.onmessage = function (message) {
                     $('#log').append(message.data + "<br/>");
                 }
 
-                $('#send').click(function(){
+                $('#send').click(function () {
                     var text = $('#msg').val();
-                    socket.send(text);
+                    var event = {
+                        'type': 'broadcast',
+                        'body': text
+                    };
+                    socket.send(JSON.stringify(event));
                     $('#msg').val('');
+                });
+
+                $('#login').click(function () {
+                    var text = $('#user').val();
+                    var event = {
+                        'type': 'login',
+                        'body': text
+                    };
+                    socket.send(JSON.stringify(event));
                 })
-    
+
             });
         </script>        
     </head>
     <body>
         <h1>WebSocketテスト</h1>
-        <div id="log">
+        <div>
+            <h3>Login</h3>
+            User:<input id="user" type="text"/>
+            <button id="login">Login</button>
+        </div>   
+        <div>
+            <h3>Simple Chat</h3>
+            <div id="log">
+            </div>
+            <input id="msg" type="text"/>
+            <button id="send">送信</button>
         </div>
-        <input id="msg" type="text"/>
-        <button id="send">送信</button>
     </body>
 </html>

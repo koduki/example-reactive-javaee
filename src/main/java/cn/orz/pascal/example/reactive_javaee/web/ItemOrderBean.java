@@ -41,13 +41,13 @@ public class ItemOrderBean implements Serializable {
     @Getter
     @Setter
     private int price;
-
-    public String getAge() {
-        return "12";
-    }
+    
+    @Getter
+    @Setter
+    private String user;
 
     public String doOrder() {
-        ItemOrder item = new ItemOrder(name, price);
+        ItemOrder item = new ItemOrder(name, price, user);
         itemOrderFacade.create(item);
 
         return "index";

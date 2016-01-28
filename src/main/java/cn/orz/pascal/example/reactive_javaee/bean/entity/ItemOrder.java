@@ -37,15 +37,17 @@ public class ItemOrder implements Serializable {
 
     private String name;
     private int price;
+    private String userName;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    public ItemOrder(String name, int price) {
+    public ItemOrder(String name, int price, String user) {
         this.name = name;
         this.price = price;
+        this.userName = user;
     }
 
     @PreUpdate

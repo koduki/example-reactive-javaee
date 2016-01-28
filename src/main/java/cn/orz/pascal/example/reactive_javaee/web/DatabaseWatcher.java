@@ -6,8 +6,11 @@
 package cn.orz.pascal.example.reactive_javaee.web;
 
 import cn.orz.pascal.example.reactive_javaee.bean.ItemOrderFacade;
+import cn.orz.pascal.example.reactive_javaee.bean.MessageEvent;
 import cn.orz.pascal.example.reactive_javaee.bean.Sender;
 import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -37,11 +40,26 @@ public class DatabaseWatcher {
 
     @Schedule(hour = "*", minute = "*", second = "*")
     public void watch() {
-        List<ItemOrder> items = itemOrderFacade.findByUpdated(oldDate);
-        System.out.println("updated is " + items.size());
-        
-        
-        items.forEach(item -> sender.send(item));
-        this.oldDate = new Date();
+        try {
+
+            List<ItemOrder> items = itemOrderFacade.findByUpdated(oldDate);
+            System.out.println("updated is " + items.size());
+            ObjectMapper mapper = new ObjectMapper();
+
+            for (ItemOrder order : items) {
+                MessageEvent event = new MessageEvent();
+                event.setType(order.getClass().getSimpleName());
+                event.setUser(order.getUserName());
+                event.setBody(mapper.writeValueAsString(order));
+
+                String json = mapper.writeValueAsString(event);
+                sender.send(json);
+
+            }
+
+            this.oldDate = new Date();
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

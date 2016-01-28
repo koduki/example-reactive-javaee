@@ -5,6 +5,9 @@
  */
 package cn.orz.pascal.example.reactive_javaee.bean;
 
+import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -28,9 +31,10 @@ import javax.jms.TextMessage;
             propertyValue = "javax.jms.Queue")
 })
 public class SimpleMessageBean implements MessageListener {
+
     @Inject
     WSManager wsManager;
-    
+
     @Resource
     private MessageDrivenContext context;
     static final Logger logger = Logger.getLogger("SimpleMessageBean");
@@ -38,26 +42,36 @@ public class SimpleMessageBean implements MessageListener {
     public SimpleMessageBean() {
     }
 
+    private void handle(MessageEvent event) throws IOException {
+        switch (event.getType()) {
+            case "ItemOrder":
+                ObjectMapper mapper = new ObjectMapper();
+                ItemOrder order = mapper.readValue(event.getBody(), ItemOrder.class);
+
+                wsManager.send(event.getUser(), order.toString());
+                break;
+            default:
+                logger.log(Level.WARNING, "MessageEvent of wrong type: {0}", event.getType());
+        }
+    }
+
     @Override
     public void onMessage(Message message) {
-
         try {
             if (message instanceof TextMessage) {
                 String msg = message.getBody(String.class);
-                logger.log(Level.INFO,
-                        "MESSAGE BEAN: Message received: {0}",
-                        msg);
-                wsManager.broadcast(msg);
-                
+                logger.log(Level.INFO, "MESSAGE BEAN: Message received: {0}", msg);
+
+                ObjectMapper mapper = new ObjectMapper();
+                MessageEvent event = mapper.readValue(msg, MessageEvent.class);
+                handle(event);
+
             } else {
-                logger.log(Level.WARNING,
-                        "Message of wrong type: {0}",
-                        message.getClass().getName());
+                logger.log(Level.WARNING, "Message of wrong type: {0}", message.getClass().getName());
             }
-        } catch (JMSException e) {
+        } catch (JMSException | IOException e) {
             logger.log(Level.SEVERE,
-                    "SimpleMessageBean.onMessage: JMSException: {0}",
-                    e.toString());
+                    "SimpleMessageBean.onMessage: JMSException: {0}", e.toString());
             context.setRollbackOnly();
         }
     }
