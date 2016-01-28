@@ -1,16 +1,32 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
     <h:head>
-        <title>Facelet Title</title>
-        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <title>Simple Order</title>
     </h:head>
     <h:body>
-        Hello from Facelets
-        <br />
-        <h:link outcome="/itemOrder/List" value="Show All ItemOrder Items"/>
+        <h1>Simple Order</h1>
+        <form jsf:id="form">
+            <p>
+                <input jsf:id='name' type='text' jsf:value='#{itemOrderBean.name}' />
+            </p>
+            <p>
+                <input jsf:id='price' type='text' jsf:value='#{itemOrderBean.price}' />
+            </p>
+            <button jsf:action="#{itemOrderBean.doOrder}">Order</button>
+        </form>
+        <p>
+            <ul>
+                <li jsfc="ui:repeat" value="#{itemOrderBean.itemOrders}"
+                    var="order" varStatus="stat"  >
+                    #{stat.index}. #{order.name}:#{order.price} #{order.createdAt}
+                </li>
+            </ul>
+        </p>
     </h:body>
-
 </html>
-

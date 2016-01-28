@@ -25,6 +25,7 @@ public class WSEndpoint {
 
     @OnMessage
     public void onMessage(String message) {
+        
         manager.broadcast(message);
     }
 

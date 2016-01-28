@@ -6,9 +6,13 @@
 package cn.orz.pascal.example.reactive_javaee.bean;
 
 import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -16,6 +20,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class ItemOrderFacade extends AbstractFacade<ItemOrder> {
+
     @PersistenceContext(unitName = "cn.orz.pascal_example-reactive-javaee_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -27,5 +32,16 @@ public class ItemOrderFacade extends AbstractFacade<ItemOrder> {
     public ItemOrderFacade() {
         super(ItemOrder.class);
     }
-    
+
+    public List<ItemOrder> findByUpdated(Date date) {
+        TypedQuery<ItemOrder> query = em.createQuery(
+                "select t from ItemOrder t where t.updatedAt >= :date",
+                ItemOrder.class
+        );
+        query.setParameter("date", date);
+        List<ItemOrder> result = query.getResultList();
+
+        return result;
+    }
+
 }

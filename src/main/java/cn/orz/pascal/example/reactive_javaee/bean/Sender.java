@@ -5,6 +5,9 @@
  */
 package cn.orz.pascal.example.reactive_javaee.bean;
 
+import cn.orz.pascal.example.reactive_javaee.bean.entity.ItemOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -22,5 +25,16 @@ public class Sender {
 
     public void send(String message) {
         context.createProducer().send(myQueue, message);
+    }
+
+    public void send(ItemOrder message) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(message);
+
+            context.createProducer().send(myQueue, json);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
